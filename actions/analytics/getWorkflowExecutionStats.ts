@@ -4,13 +4,13 @@ import { PeriodToDateRange } from "@/lib/helper/dates";
 import { prisma } from "@/lib/prisma";
 import { Period } from "@/types/analytics";
 import { WorkflowExecutionStatus } from "@/types/workflow";
-import { auth } from "@clerk/nextjs/server";
+import { auth } from "@/lib/auth";
 import { eachDayOfInterval, format } from "date-fns";
 
 type Stats = Record<string, {success: number, failed: number}>;
 
 export async function GetWorkflowExecutionStats(period: Period) {
-    const {userId} = auth();
+    const { userId } = await auth();
     if(!userId){
         throw new Error("User not authenticated");
     }

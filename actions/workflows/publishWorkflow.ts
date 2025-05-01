@@ -4,11 +4,11 @@ import { prisma } from "@/lib/prisma";
 import { FlowToExecutionplan } from "@/lib/workflow/executionPlan";
 import { CalculateWorkflowCost } from "@/lib/workflow/helpers";
 import { WorkflowStatus } from "@/types/workflow";
-import { auth } from "@clerk/nextjs/server";
+import { auth } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 
 export async function PublishWorkflow({id, flowDefinition}: {id: string, flowDefinition: string}) {
-    const {userId} = auth();
+    const { userId } = await auth();
     if(!userId) throw new Error("Unauthenticated");
     const workflow = await prisma.workflow.findUnique({
         where: {

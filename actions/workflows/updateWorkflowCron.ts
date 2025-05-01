@@ -1,13 +1,13 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { auth } from "@clerk/nextjs/server";
+import { auth } from "@/lib/auth";
 import { CronExpressionParser } from 'cron-parser';
 import { revalidatePath } from "next/cache";
 
 
 export async function UpdateWorkflowCron({id, cron}: {id: string, cron: string}) {
-    const {userId} = auth();
+    const { userId } = await auth();
     if(!userId) throw new Error("Unauthenticated");
     try{
         const options = {

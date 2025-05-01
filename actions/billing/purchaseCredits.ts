@@ -3,11 +3,11 @@
 import { stripe } from "@/lib/stripe/stripe";
 import { getAppUrl } from "@/types/appUrl";
 import { getCreditsPack, PackId } from "@/types/billing";
-import { auth } from "@clerk/nextjs/server";
+import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
 export async function PurchaseCredits(packId: PackId) {
-    const {userId} = auth();
+    const { userId } = await auth();
     if(!userId) throw new Error("User not authenticated");
     
     const selectedPack = getCreditsPack(packId);

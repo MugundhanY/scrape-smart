@@ -2,10 +2,10 @@
 
 import { prisma } from "@/lib/prisma";
 import { Period } from "@/types/analytics";
-import { auth } from "@clerk/nextjs/server";
+import { auth } from "@/lib/auth";
 
 export async function GetPeriods() {
-    const { userId } = auth();
+    const { userId } = await auth();
 
     if (!userId) {
         throw new Error("User not authenticated");

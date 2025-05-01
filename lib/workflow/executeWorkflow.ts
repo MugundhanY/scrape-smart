@@ -108,7 +108,7 @@ async function finalizeWorkflowExecution(
             lastRunStatus: finalStatus,
         }
     }).catch((err) => {
-
+        console.log("Cannot update workflow last run status", err);
     });
 }
 

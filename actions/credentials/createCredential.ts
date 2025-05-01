@@ -3,7 +3,7 @@
 import { symmetricEncrypt } from "@/lib/encryption";
 import { prisma } from "@/lib/prisma";
 import { createCredentialSchema, createCredentialSchemaType } from "@/schema/credential";
-import { auth } from "@clerk/nextjs/server";
+import { auth } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 
 export async function createCredential(form: createCredentialSchemaType){
@@ -12,7 +12,7 @@ export async function createCredential(form: createCredentialSchemaType){
         throw new Error ("Invalid form data");
    }
 
-   const {userId} = auth();
+   const { userId } = await auth();
    if(!userId){
        throw new Error("Unauthorized");
    }

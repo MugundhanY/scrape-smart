@@ -1,11 +1,11 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { auth } from "@clerk/nextjs/server";
+import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
 export async function SetupUser(){
-    const { userId } = auth();
+    const { userId } = await auth();
     if (!userId) {
         throw new Error("User not authenticated");
     }

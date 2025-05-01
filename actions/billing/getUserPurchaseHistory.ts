@@ -1,10 +1,10 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { auth } from "@clerk/nextjs/server";
+import { auth } from "@/lib/auth";
 
 export async function GetUserPurchaseHistory(){
-    const { userId } = auth();
+    const { userId } = await auth();
 
     if(!userId) throw new Error("Unauthenticated");
 

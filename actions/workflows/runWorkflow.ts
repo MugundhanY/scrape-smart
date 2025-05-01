@@ -5,14 +5,14 @@ import { ExecuteWorkflow } from "@/lib/workflow/executeWorkflow";
 import { FlowToExecutionplan } from "@/lib/workflow/executionPlan";
 import { TaskRegistry } from "@/lib/workflow/task/registry";
 import { ExecutionPhaseStatus, WorkflowExecutionPlan, WorkflowExecutionStatus, WorkflowExecutionTrigger, WorkflowStatus } from "@/types/workflow";
-import { auth } from "@clerk/nextjs/server";
+import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
 export async function RunWorkflow(form: {
     workflowId: string;
     flowDefinition?: string;
 }) {
-    const {userId} = auth();
+    const { userId } = await auth();
     if(!userId) throw new Error("Unathenticated");
 
     const {workflowId, flowDefinition} = form;

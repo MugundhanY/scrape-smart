@@ -2,7 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { WorkflowStatus } from "@/types/workflow";
-import { auth } from "@clerk/nextjs/server";
+import { auth } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 
 export async function UpdateWorkflow({
@@ -12,7 +12,7 @@ export async function UpdateWorkflow({
     id: string;
     definition: string;
 }) {
-    const { userId } = auth();
+    const { userId } = await auth();
 
     if(!userId) {
         throw new Error("User is not authenticated");
