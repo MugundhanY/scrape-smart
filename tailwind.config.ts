@@ -95,11 +95,22 @@ const config: Config = {
   				to: {
   					height: '0'
   				}
-  			}
+  			},
+            'flowConnect': {
+                '0%': {
+                    strokeDasharray: '0 1500',
+                    opacity: '0.2',
+                },
+                '100%': {
+                    strokeDasharray: '1500 1500',
+                    opacity: '1',
+                }
+            }
   		},
   		animation: {
   			'accordion-down': 'accordion-down 0.2s ease-out',
-  			'accordion-up': 'accordion-up 0.2s ease-out'
+  			'accordion-up': 'accordion-up 0.2s ease-out',
+            'flowConnect': 'flowConnect 0.5s ease-out forwards'
   		}
   	}
   },

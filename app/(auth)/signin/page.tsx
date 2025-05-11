@@ -18,7 +18,7 @@ import { motion } from "framer-motion";
 export default function SignIn() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/";
+  const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
   const error = searchParams.get("error");
 
   const [isLoading, setIsLoading] = useState(false);
@@ -117,7 +117,7 @@ export default function SignIn() {
         <Card className="border shadow-lg">
           <CardHeader className="space-y-1">
             <motion.div variants={itemVariants} className="flex justify-center mb-2">
-              <Logo />
+              <Logo href="/"/>
             </motion.div>
             <motion.div variants={itemVariants}>
               <CardTitle className="text-2xl font-bold text-center">Welcome Back</CardTitle>
@@ -274,7 +274,7 @@ export default function SignIn() {
               variants={itemVariants}
               className="text-sm text-muted-foreground"
             >
-              Don't have an account?{" "}
+              Don&apos;t have an account?{" "}
               <Link href="/signup" className="text-primary font-medium hover:underline">
                 Sign up
               </Link>

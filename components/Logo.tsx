@@ -2,20 +2,24 @@ import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import React from 'react';
 
+type LogoProps = {
+  fontSize?: string;
+  iconSize?: number;
+  href?: string;
+};
+
 function Logo({
   fontSize = "text-2xl",
   iconSize = 32,
-}: {
-  fontSize?: string;
-  iconSize?: number;
-}) {
+  href = "/dashboard",
+}: LogoProps) {
   // Define some relative measurements for our SVG
   const strokeWidth = 2;
   const offset = iconSize * 0.1;
   const center = iconSize / 2;
 
   return (
-    <Link href="/" className={cn("font-extrabold flex items-center gap-2", fontSize)}>
+    <Link href={href} className={cn("font-extrabold flex items-center gap-2", fontSize)}>
       <div
         className="rounded-xl bg-gradient-to-r from-[hsl(var(--primary))] to-[hsl(var(--ring))] p-2 flex items-center justify-center"
         style={{ width: iconSize + 16, height: iconSize + 16 }}
@@ -48,7 +52,7 @@ function Logo({
         <span className="bg-gradient-to-r from-[hsl(var(--primary))] to-[hsl(var(--ring))] bg-clip-text text-transparent">
           Scrape
         </span>
-        <span className="text-stone-700 dark:text-stone-300">Smart</span>
+        <span className="text-foreground">Smart</span>
       </div>
     </Link>
   );

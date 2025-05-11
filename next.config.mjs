@@ -8,6 +8,10 @@ const nextConfig = {
   experimental: {
     // Server Actions are now enabled by default in Next.js 14+
   },
+  // Configure allowed image domains
+  images: {
+    domains: ['images.unsplash.com'],
+  },
   // Properly handle server-only packages
   webpack: (config, { isServer }) => {
     if (!isServer) {

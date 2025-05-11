@@ -109,7 +109,7 @@ export default function SignUp() {
         toast.error("Registration successful, but there was an issue signing in. Please sign in manually.");
         router.push("/signin");
       } else {
-        router.push("/");
+        router.push("/dashboard");
       }
     } catch (error: any) {
       toast.error(error.message || "Something went wrong during registration");
@@ -130,7 +130,7 @@ export default function SignUp() {
   const handleGoogleSignUp = async () => {
     setIsLoading(true);
     try {
-      await signIn("google", { callbackUrl: "/" });
+      await signIn("google", { callbackUrl: "/dashboard" });
     } catch (error) {
       console.error("Google sign up error:", error);
       toast.error("Google sign up failed. Please try again.");
@@ -181,7 +181,7 @@ export default function SignUp() {
         <Card className="border shadow-lg">
           <CardHeader className="space-y-1">
             <motion.div variants={itemVariants} className="flex justify-center mb-2">
-              <Logo />
+              <Logo href="/" />
             </motion.div>
             <motion.div variants={itemVariants}>
               <CardTitle className="text-2xl font-bold text-center">Create an Account</CardTitle>

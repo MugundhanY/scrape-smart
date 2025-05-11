@@ -63,7 +63,7 @@ function TaskMenu() {
   )
 }
 
-function TaskMenuBtn({ taskType }: { taskType: TaskType }) {
+export function TaskMenuBtn({ taskType }: { taskType: TaskType }) {
     const task = TaskRegistry[taskType];
     const onDragStart = (e: React.DragEvent, type: TaskType) => {
         e.dataTransfer.setData('application/reactflow', type);

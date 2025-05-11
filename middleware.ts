@@ -1,59 +1,56 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-// Create a matcher for public routes that don't require authentication
-const isPublicRoute = (path: string) => {
-  const publicRoutes = [
-    '/signin',
-    '/signup',
-    '/api/webhooks/stripe',
-    '/api/auth'
-  ];
-  
-  // Check if path starts with any of the public routes
-  return publicRoutes.some(route => 
-    path.startsWith(route) || 
-    path.match(/^\/api\/workflows\/.*/)
-  );
-};
+// Define public routes that don't require authentication
+const publicRoutes = [
+  '/signin',
+  '/signup',
+  '/api/webhooks/stripe',
+  '/api/auth',
+  '/',
+  // Add other public routes here
+];
 
-// Simple function to check if session token exists
-function isAuthenticated(request: NextRequest): boolean {
-  const sessionToken = request.cookies.get('next-auth.session-token')?.value || 
-                      request.cookies.get('__Secure-next-auth.session-token')?.value;
-  
-  return !!sessionToken;
-}
+// Check if the requested path is a public route
+const isPublicRoute = (path: string) => {
+  return publicRoutes.some(route => path === route || path.startsWith(`${route}/`)) || 
+         path.match(/^\/api\/workflows\/.*/) !== null;
+};
 
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
   
-  // Only redirect signin/signup pages for authenticated users, but not root path
-  if (isAuthenticated(request) && (path === '/signin' || path === '/signup')) {
-    return NextResponse.redirect(new URL('/', request.url));
-  }
-  
-  // Allow public routes
+  // Allow public routes without authentication
   if (isPublicRoute(path)) {
     return NextResponse.next();
   }
 
-  // Simple authentication check - just verify token exists
-  // We're avoiding JWT decoding here to prevent Edge Runtime errors
-  if (!isAuthenticated(request)) {
+  // Check for authentication by looking for the session cookie
+  const hasAuthCookie = request.cookies.has('next-auth.session-token') || 
+                       request.cookies.has('__Secure-next-auth.session-token');
+
+  // Redirect to signin if not authenticated
+  if (!hasAuthCookie) {
+    // Build the sign in URL with the current URL as callback
     const signInUrl = new URL('/signin', request.url);
+    // Add the current URL as a callback parameter
     signInUrl.searchParams.set('callbackUrl', request.url);
+    // Redirect to sign in page
     return NextResponse.redirect(signInUrl);
   }
-  
+
+  // If authenticated and trying to access auth pages, redirect to dashboard
+  if (hasAuthCookie && (path === '/signin' || path === '/signup')) {
+    return NextResponse.redirect(new URL('/dashboard', request.url));
+  }
+
+  // Continue with the request for authenticated users
   return NextResponse.next();
 }
 
 export const config = {
   matcher: [
-    // Skip Next.js internals and all static files, unless found in search params
-    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
-    // Always run for API routes
-    '/(api|trpc)(.*)',
+    // Match all routes except static files and internal Next.js routes
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:jpg|jpeg|gif|png|svg|ico)).*)',
   ],
 };
