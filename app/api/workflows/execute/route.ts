@@ -50,9 +50,15 @@ export async function GET(request: Request) {
     try{
         const options = {
             tz: 'UTC',
-          };
-        const cron = parser.parse(workflow.cron!, options);
+          };        const cron = parser.parse(workflow.cron!, options);
         const nextRun = cron.next().toDate();
+        
+        // Update the workflow with the next run time
+        await prisma.workflow.update({
+            where: { id: workflowId },
+            data: { nextRunAt: nextRun }
+        });
+        
         const execution = await prisma.workflowExecution.create({
             data: {
                 workflowId,
@@ -78,8 +84,12 @@ export async function GET(request: Request) {
         });
     
         await ExecuteWorkflow(execution.id);
-        return new Response(null, {status: 200});
-    } catch(error) {
-        return Response.json({error: "internal server error"}, {status: 500});
+        return new Response(null, {status: 200});    } catch(error: any) {
+        console.error(`Error executing workflow ${workflowId}:`, error);
+        return Response.json({
+            error: "internal server error", 
+            message: error?.message || "Unknown error",
+            workflowId
+        }, {status: 500});
     }
 }

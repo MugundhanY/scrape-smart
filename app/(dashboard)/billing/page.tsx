@@ -99,8 +99,9 @@ function formatDate(date: Date) {
 }
 
 function formatAmount(amount: number, currency: string) {
-    return new Intl.NumberFormat("en-IN", {
+    // Always format as Singapore dollars
+    return new Intl.NumberFormat("en-SG", {
         style: "currency",
-        currency,
+        currency: "SGD",
     }).format(amount / 100);
 }

@@ -35,7 +35,7 @@ export default function CreditsPurchase() {
                         <RadioGroupItem value={pack.id} id={pack.id} />
                         <Label className="flex justify-between w-full cursor-pointer">
                             <span className="font-medium">{pack.name} - {pack.label}</span>
-                            <span className="font-bold text-primary">₹ {(pack.price / 100).toFixed(2)}</span>
+                            <span className="font-bold text-primary">$ {(pack.price / 100).toFixed(2)}</span>
                         </Label>
                     </div>
                 ))}
