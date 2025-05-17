@@ -36,8 +36,6 @@ export async function GET() {  try {
   }
 }
 
-// Configure this route to run every 10 minutes using Vercel Free Tier Cron
-export const config = {
-  runtime: 'edge',
-  regions: ['sin1'], // Singapore region for lower latency
-};
+// Configure this route to run once daily using Vercel Hobby Tier Cron
+export const runtime = 'edge';
+export const regions = ['sin1']; // Singapore region for lower latency

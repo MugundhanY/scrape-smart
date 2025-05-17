@@ -3,10 +3,8 @@ import { stripe } from "@/lib/stripe/stripe";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
-// Add export config to mark this as an edge-compatible API Route
-export const config = {
-  runtime: 'edge',
-};
+// Add export runtime to mark this as an edge-compatible API Route
+export const runtime = 'edge';
 
 export async function POST(request: Request){
     const body = await request.text();
