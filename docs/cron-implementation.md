@@ -33,11 +33,13 @@ For production, we use Vercel's built-in cron jobs to trigger the workflow sched
      "crons": [
        {
          "path": "/api/cron",
-         "schedule": "0/10 * * * *"
+         "schedule": "0 0 * * *"
        }
      ]
    }
    ```
+
+   Note: For hobby tier accounts, we're limited to daily cron jobs. If you need more frequent scheduling, you'll need to upgrade to the Pro plan.
 
 2. This triggers the `/api/cron` endpoint every 10 minutes, which then calls the internal cron processing endpoint.
 3. This schedule is optimized for Vercel's free tier, which has limitations on execution frequency.

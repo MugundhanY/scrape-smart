@@ -3,7 +3,7 @@
 
 import { NextResponse } from 'next/server';
 
-// This route will be called every 10 minutes by Vercel's free tier cron system
+// This route will be called once daily by Vercel's hobby tier cron system
 export async function GET() {  try {
     // Call our internal cron endpoint to process scheduled workflows
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';

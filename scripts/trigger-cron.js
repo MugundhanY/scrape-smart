@@ -1,5 +1,5 @@
 // This script can be used to manually trigger cron jobs during development
-// Optimized for Vercel's free tier - runs every 10 minutes in production
+// Vercel Hobby tier limitation: Only daily cron jobs are allowed (0 0 * * *)
 // Run with: node scripts/trigger-cron.js
 
 const dotenv = require('dotenv');

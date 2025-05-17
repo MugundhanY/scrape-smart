@@ -2,17 +2,18 @@
 
 This document provides guidance on effectively using Vercel's cron jobs with the ScrapeSmart application, particularly focusing on the free tier constraints.
 
-## Vercel Free Tier Cron Limitations
+## Vercel Hobby Tier Cron Limitations
 
-Vercel's free tier includes cron jobs with the following limitations:
+Vercel's hobby tier includes cron jobs with the following limitations:
 
 1. **Schedule Frequency**:
-   - Not every frequency is available
-   - The most frequent allowed schedule is every 10 minutes (`0/10 * * * *`)
+   - Hobby accounts are limited to daily cron jobs only
+   - The most frequent allowed schedule is once per day (`0 0 * * *` - runs at midnight)
+   - More frequent schedules require upgrading to the Pro plan
 
 2. **Daily Execution Limit**: 
    - There's a limit to the number of executions per day
-   - This is why we've optimized the cron job to run every 10 minutes instead of every minute
+   - With the hobby tier restriction, we are limited to running the cron job once daily
 
 ## Implementation Optimizations
 
