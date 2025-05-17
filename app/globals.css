@@ -94,3 +94,29 @@
     @apply !bg-accent;
   }
 }
+
+/* Force dark mode for landing page */
+html.dark {
+  color-scheme: dark !important;
+
+  /* Ensure landing page is always in dark mode */
+  --background: 20 14.3% 4.1% !important;
+  --foreground: 0 0% 95% !important;
+  --card: 24 9.8% 10% !important;
+  --card-foreground: 0 0% 95% !important;
+  --popover: 0 0% 9% !important;
+  --popover-foreground: 0 0% 95% !important;
+  --primary: 210 50% 55% !important;
+  --primary-foreground: 144.9 80.4% 10% !important;
+  --secondary: 240 3.7% 15.9% !important;
+  --secondary-foreground: 0 0% 98% !important;
+  --muted: 0 0% 15% !important;
+  --muted-foreground: 240 5% 64.9% !important;
+  --accent: 12 6.5% 15.1% !important;
+  --accent-foreground: 0 0% 98% !important;
+  --destructive: 0 62.8% 30.6% !important;
+  --destructive-foreground: 0 85.7% 97.3% !important;
+  --border: 240 3.7% 15.9% !important;
+  --input: 240 3.7% 15.9% !important;
+  --ring: 210 50% 55% !important;
+}

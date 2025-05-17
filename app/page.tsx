@@ -10,7 +10,8 @@ import FooterSection from "@/components/landing/FooterSection";
 import FAQ from "@/components/landing/FAQ";
 import ContactForm from "@/components/landing/ContactForm";
 import VisualEditorSection from "@/components/landing/VisualEditorSection";
-
+import DarkModeDocumentClass from "@/components/landing/DarkModeDocumentClass";
+import { useForceDarkMode } from "@/hooks/use-force-dark-mode";
 
 import { HomeStructuredData, BusinessStructuredData, FAQStructuredData } from "@/components/seo/StructuredData";
 
@@ -35,8 +36,14 @@ const faqData = [
 ];
 
 export default function Home() {
+  // Force dark mode on the landing page
+  useForceDarkMode();
+  
   return (
-    <main className="min-h-screen bg-black text-white">
+    <main className="landing-page min-h-screen bg-black text-white dark">
+      {/* Force dark mode at document level */}
+      <DarkModeDocumentClass />
+      
       {/* SEO Structured Data */}
       <HomeStructuredData />
       <BusinessStructuredData />

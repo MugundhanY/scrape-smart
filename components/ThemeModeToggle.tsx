@@ -3,6 +3,7 @@
 import * as React from "react"
 import { Moon, MoonIcon, Sun } from "lucide-react"
 import { useTheme } from "next-themes"
+import { usePathname } from "next/navigation"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -13,7 +14,14 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 export function ModeToggle() {
-  const { setTheme } = useTheme()
+  const { setTheme } = useTheme();
+  const pathname = usePathname();
+  const isLandingPage = pathname === "/";
+
+  // Don't render the theme toggle on the landing page
+  if (isLandingPage) {
+    return null;
+  }
 
   return (
     <DropdownMenu>

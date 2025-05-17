@@ -136,7 +136,7 @@ export default function SettingsPage() {
                   <AlertCircle className="h-4 w-4" />
                   <AlertTitle>Social Login Detected</AlertTitle>
                   <AlertDescription>
-                    You're using Google to sign in. Password management is handled by your social provider.
+                    You&apos;re using Google to sign in. Password management is handled by your social provider.
                   </AlertDescription>
                 </Alert>
               ) : (

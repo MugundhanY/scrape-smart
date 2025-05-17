@@ -243,7 +243,7 @@ export default function NavBar() {
               className="hidden md:block"
             >
               <Link 
-                href="https://github.com" 
+                href="https://github.com/MugundhanY/scrape-smart" 
                 target="_blank"
                 className="flex items-center text-white/70 hover:text-white gap-1.5 text-[12px] font-medium"
               >

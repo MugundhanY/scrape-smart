@@ -38,7 +38,6 @@ export default function HeroSection() {
   const heroInView = useInView(heroRef, { once: true, amount: 0.3 });
   const { scrollYProgress } = useScroll();
   const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
-  const [showDemo, setShowDemo] = useState(false);
 
   // Node descriptions for tooltips
   const nodeDescriptions = {
@@ -123,8 +122,7 @@ export default function HeroSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.8 }}
           className="flex justify-center gap-4 flex-wrap mb-16 sm:flex-row flex-col px-6 sm:px-0"
-        >
-          <Link href="/signup">
+        >          <Link href="/signup">
             <Button 
               size="lg" 
               className="bg-white hover:bg-white/90 text-black rounded-full h-14 px-8 text-lg relative overflow-hidden group"
@@ -134,40 +132,15 @@ export default function HeroSection() {
             </Button>
           </Link>
           
-          <Dialog open={showDemo} onOpenChange={setShowDemo}>
-            <DialogTrigger asChild>
-              <Button 
-                variant="outline" 
-                size="lg" 
-                className="border-white/10 bg-white/5 hover:bg-white/10 text-white rounded-full h-14 px-8 text-lg"
-              >
-                <PlayIcon className="mr-2 h-5 w-5" /> Watch the demo
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[900px] p-0 bg-black/95 border-white/10">
-              <div className="p-4 border-b border-white/10">
-                <h3 className="text-xl font-medium text-white flex items-center gap-2">
-                  <PlayIcon className="h-4 w-4" />
-                  ScrapeSmart Demo
-                </h3>
-                <p className="text-white/60 text-sm mt-1">See how easy it is to build powerful web scraping workflows</p>
-              </div>
-              <div className="absolute top-4 right-4 z-50">
-                <Button variant="ghost" size="icon" onClick={() => setShowDemo(false)} className="text-white/70 hover:text-white hover:bg-white/10 rounded-full">
-                  <XIcon className="h-4 w-4" />
-                </Button>
-              </div>
-              <div className="aspect-video w-full">
-                <iframe 
-                  className="w-full h-full"
-                  src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=0" 
-                  title="ScrapeSmλrt Demo Video" 
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                  allowFullScreen>
-                </iframe>
-              </div>
-            </DialogContent>
-          </Dialog>
+          <Link href="/pricing">
+            <Button 
+              variant="outline" 
+              size="lg" 
+              className="border-white/10 bg-white/5 hover:bg-white/10 text-white rounded-full h-14 px-8 text-lg"
+            >
+              <Zap className="mr-2 h-5 w-5" /> View Pricing
+            </Button>
+          </Link>
         </motion.div>
 
         {/* Workflow Editor Animation */}

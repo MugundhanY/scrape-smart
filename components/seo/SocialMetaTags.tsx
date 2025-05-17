@@ -17,7 +17,7 @@ type SeoProps = {
 export function SocialMetaTags({
   title = "ScrapeSmart - Intelligent Web Data Extraction Platform",
   description = "Transform your data collection workflow with ScrapeSmart. Extract web data with precision, reliability and unprecedented ease.",
-  image = "/images/og-image.png",
+  image = "/images/logo.svg",
   type = "website",
   date,
   updatedAt,
