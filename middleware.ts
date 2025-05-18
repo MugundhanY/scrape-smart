@@ -48,8 +48,9 @@ export async function middleware(request: NextRequest) {
   return NextResponse.next();
 }
 
-// Updated configuration format that follows Next.js latest conventions
-export const matcher = [
-  // Match all routes except static files and internal Next.js routes
-  '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:jpg|jpeg|gif|png|svg|ico)).*)',
-];
+export const config = {
+  matcher: [
+    // Match all routes except static files and internal Next.js routes
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:jpg|jpeg|gif|png|svg|ico)).*)',
+  ],
+};
