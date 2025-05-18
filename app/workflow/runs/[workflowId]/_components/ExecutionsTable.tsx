@@ -10,6 +10,7 @@ import { WorkflowExecutionStatus } from '@/types/workflow';
 import { CoinsIcon } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { useRouter } from 'next/navigation';
+import { WorkflowExecution } from '@/types/prisma';
 
 type InitialDataType = Awaited<ReturnType<typeof GetWorkflowExecutions>>;
 
@@ -31,10 +32,9 @@ function ExecutionsTable({workflowId, initialData}: {workflowId: string, initial
                     <TableHead>Status</TableHead>
                     <TableHead>Consumed</TableHead>
                     <TableHead className='text-right text-xs text-muted-foreground'>Started at (desc)</TableHead>
-                </TableRow>
-            </TableHeader>
+                </TableRow>            </TableHeader>
             <TableBody className='gap-2 h-full overflow-auto'>
-                {query.data.map((execution) => {
+                {query.data.map((execution: WorkflowExecution) => {
                     const duration = DatesToDurationString(execution.completedAt, execution.startedAt);
 
                     const formattedStartedAt = execution.startedAt && formatDistanceToNow(execution.startedAt, { addSuffix: true });

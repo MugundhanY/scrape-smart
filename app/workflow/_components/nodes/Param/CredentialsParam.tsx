@@ -4,6 +4,7 @@ import { GetCredentialsForUser } from '@/actions/credentials/getCredentialsForUs
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ParamProps } from '@/types/appNode';
+import type { Credential } from '@/types/prisma';
 import { useQuery } from '@tanstack/react-query';
 import React, { useId } from 'react'
 
@@ -24,10 +25,9 @@ function CredentialsParam({param, updateNodeParamValue, value}: ParamProps) {
         <SelectTrigger className='w-full'>
           <SelectValue placeholder='Select an option' />
         </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
+        <SelectContent>          <SelectGroup>
             <SelectLabel>Credentials</SelectLabel>
-            {query.data?.map(credential => (
+            {query.data?.map((credential: Credential) => (
               <SelectItem key={credential.id} value={credential.id}>{credential.name}</SelectItem>
             ))}
           </SelectGroup>

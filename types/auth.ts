@@ -1,4 +1,4 @@
-import { User } from "@prisma/client";
+import { User } from "@/types/prisma";
 import { Session } from "next-auth";
 import type { LiteralUnion } from "next-auth/react";
 

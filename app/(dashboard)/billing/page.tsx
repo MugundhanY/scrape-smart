@@ -11,6 +11,17 @@ import CreditUsageChart from "./_components/CreditUsageChart";
 import { GetUserPurchaseHistory } from "@/actions/billing/getUserPurchaseHistory";
 import InvoiceBtn from "./_components/InvoiceBtn";
 
+// Define interface for the purchase object
+interface Purchase {
+    id: string;
+    userId: string;
+    stripeId: string;
+    description: string;
+    amount: number;
+    currency: string;
+    date: Date;
+}
+
 export default function Billing() {
     return <div className="mx-auto p-4 space-y-8">
         <h1 className="text-3xl font-bold">Billing</h1>
@@ -67,11 +78,10 @@ async function TransactionHistoryCard() {
             <CardDescription>
                 View your transaction history and download invoices
             </CardDescription>
-            <CardContent className="space-y-4">
-                {purchases.length === 0 && (
+            <CardContent className="space-y-4">                {purchases.length === 0 && (
                     <p className="text-muted-foreground">No transactions yet</p>
                 )}
-                {purchases.map((purchase) => (
+                {purchases.map((purchase: Purchase) => (
                     <div key={purchase.id} className="flex justify-between items-center py-3 border-b last:border-b-0">
                         <div className="flex flex-col">
                             <p className="font-medium">{formatDate(purchase.date)}</p>

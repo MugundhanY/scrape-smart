@@ -28,13 +28,10 @@ export async function GetCreditUsageInPeriod(period: Period) {
             status: {
                 in: [COMPLETED, FAILED],
             }
-        },
-    });
-
-    const dateFormat = "yyyy-MM-dd";
-    const stats: Stats = eachDayOfInterval({start: dateRange.startDate, end: dateRange.endDate}).map((date) => format(date, dateFormat)).reduce((acc, date) => { acc[date] = {success: 0, failed: 0}; return acc;}, {} as any);
-
-    executionPhases.forEach((phase) => {
+        },    });    const dateFormat = "yyyy-MM-dd";
+    const stats: Stats = eachDayOfInterval({start: dateRange.startDate, end: dateRange.endDate}).map((date) => format(date, dateFormat)).reduce((acc, date) => { acc[date] = {success: 0, failed: 0}; return acc;}, {} as any);    
+    
+    executionPhases.forEach((phase: any) => {
         const date = format(phase.startedAt!, dateFormat);
         if (phase.status === COMPLETED) {
             stats[date].success += phase.creditsConsumed || 0;

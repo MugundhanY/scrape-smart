@@ -2,7 +2,7 @@
 
 import { CreateFlowNode } from '@/lib/workflow/createFlowNode';
 import { TaskType } from '@/types/task';
-import { Workflow } from '@prisma/client';
+import { Workflow } from '@/types/prisma';
 import { addEdge, Background, BackgroundVariant, Connection, Controls, Edge, getOutgoers, ReactFlow, useEdgesState, useNodesState, useReactFlow } from '@xyflow/react';
 import "@xyflow/react/dist/style.css";
 import NodeComponent from './nodes/NodeComponent';

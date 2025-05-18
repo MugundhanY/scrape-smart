@@ -7,6 +7,7 @@ import React, { Suspense } from 'react'
 import CreateCredentialDialog from './_components/CreateCredentialDialog'
 import { formatDistanceToNow } from 'date-fns'
 import DeleteCredentialDialog from './_components/DeleteCredentialDialog'
+import type { Credential } from '@/types/prisma'
 
 function Credential() {
   return (
@@ -55,10 +56,8 @@ async function UserCredentials(){
                 </div>
             </Card>
         );
-    }
-
-    return <div className='flex gap-2 flex-wrap'>
-        {credentials.map((credential) => {
+    }    return <div className='flex gap-2 flex-wrap'>
+        {credentials.map((credential: Credential) => {
             const createdAt = formatDistanceToNow(credential.createdAt, { addSuffix: true });
             return (
                 <Card key={credential.id} className='w-full p-4 flex justify-between'>

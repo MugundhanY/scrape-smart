@@ -12,7 +12,7 @@ import { GetPhasesTotalCost } from '@/lib/helper/phases';
 import { cn } from '@/lib/utils';
 import { LogLevel } from '@/types/log';
 import { ExecutionPhaseStatus, WorkflowExecutionStatus } from '@/types/workflow';
-import { ExecutionLog } from '@prisma/client';
+import { ExecutionLog, ExecutionPhase } from '@/types/prisma';
 import { useQuery } from '@tanstack/react-query';
 import { formatDistanceToNow } from 'date-fns';
 import { CalendarIcon, CircleDashedIcon, ClockIcon, CoinsIcon, Loader2Icon, LucideIcon, WorkflowIcon } from 'lucide-react';
@@ -42,16 +42,14 @@ function ExecutionViewer({initialData}: {initialData: ExecutionData}) {
       queryFn: () => GetWorkflowPhaseDetails(selectedPhase!),
     })
 
-    const isRunning = query.data?.status === WorkflowExecutionStatus.RUNNING;
-
-    useEffect(() => {
+    const isRunning = query.data?.status === WorkflowExecutionStatus.RUNNING;    useEffect(() => {
       const phases = query.data?.phases || [];
       if(isRunning){
-        const phaseToSelect = phases.toSorted((a,b) => a.startedAt! > b.startedAt! ? -1 : 1)[0];
+        const phaseToSelect = phases.toSorted((a: ExecutionPhase, b: ExecutionPhase) => a.startedAt! > b.startedAt! ? -1 : 1)[0];
         setSelectedPhase(phaseToSelect.id);
         return;
       }
-      const phaseToSelect = phases.toSorted((a,b) => a.startedAt! > b.startedAt! ? -1 : 1)[0];
+      const phaseToSelect = phases.toSorted((a: ExecutionPhase, b: ExecutionPhase) => a.startedAt! > b.startedAt! ? -1 : 1)[0];
       setSelectedPhase(phaseToSelect.id);
     }, [query.data?.phases, isRunning, setSelectedPhase]);
     const creditsConsumed = GetPhasesTotalCost(
@@ -75,7 +73,7 @@ function ExecutionViewer({initialData}: {initialData: ExecutionData}) {
           </div>
           <Separator />
           <div className='overflow-auto h-full px-2 py-4'>
-            {query.data?.phases.map((phase, index) => (
+            {query.data?.phases.map((phase: ExecutionPhase, index: number) => (
               <Button key={phase.id} className='w-full justify-between' variant={selectedPhase === phase.id ? "secondary" : "ghost"} onClick={() => {if(isRunning) return; setSelectedPhase(phase.id)}}>
                 <div className='flex items-center gap-2'>
                   <Badge variant={"outline"}>{index+1}</Badge>

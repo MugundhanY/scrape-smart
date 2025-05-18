@@ -38,4 +38,4 @@ export async function GET() {  try {
 
 // Configure this route to run once daily using Vercel Hobby Tier Cron
 export const runtime = 'edge';
-export const regions = ['sin1']; // Singapore region for lower latency
+export const preferredRegion = 'sin1'; // Singapore region for lower latency

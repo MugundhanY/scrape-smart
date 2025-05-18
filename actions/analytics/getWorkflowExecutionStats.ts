@@ -7,6 +7,12 @@ import { WorkflowExecutionStatus } from "@/types/workflow";
 import { auth } from "@/lib/auth";
 import { eachDayOfInterval, format } from "date-fns";
 
+// Define a type for the execution object
+type WorkflowExecutionType = {
+    startedAt: Date | null;
+    status: string;
+};
+
 type Stats = Record<string, {success: number, failed: number}>;
 
 export async function GetWorkflowExecutionStats(period: Period) {
@@ -24,12 +30,10 @@ export async function GetWorkflowExecutionStats(period: Period) {
                 lte: dateRange.endDate,
             },
         },
-    });
-
-    const dateFormat = "yyyy-MM-dd";
+    });    const dateFormat = "yyyy-MM-dd";
     const stats: Stats = eachDayOfInterval({start: dateRange.startDate, end: dateRange.endDate}).map((date) => format(date, dateFormat)).reduce((acc, date) => { acc[date] = {success: 0, failed: 0}; return acc;}, {} as any);
 
-    executions.forEach((execution) => {
+    executions.forEach((execution: WorkflowExecutionType) => {
         const date = format(execution.startedAt!, dateFormat);
         if (execution.status === WorkflowExecutionStatus.COMPLETED) {
             stats[date].success += 1;

@@ -58,7 +58,7 @@ export default function SignIn() {
     return isValid;
   };
 
-  const handleLogin = async (e: React.FormEvent, callbackUrl: string) => {
+  const handleLogin = async (e, callbackUrl) => {
     e.preventDefault();
 
     if (!validateForm()) return;
@@ -85,7 +85,7 @@ export default function SignIn() {
     }
   };
 
-  const handleGoogleLogin = async (callbackUrl: string) => {
+  const handleGoogleLogin = async (callbackUrl) => {
     setIsLoading(true);
     await signIn("google", { callbackUrl });
   };
@@ -168,19 +168,6 @@ function LoginForm({
   handleLogin,
   handleGoogleLogin,
   itemVariants
-}: {
-  email: string;
-  password: string;
-  showPassword: boolean;
-  formErrors: { email: string; password: string };
-  isLoading: boolean;
-  setEmail: (value: string) => void;
-  setPassword: (value: string) => void;
-  setShowPassword: (value: boolean) => void;
-  setFormErrors: (value: { email: string; password: string }) => void;
-  handleLogin: (e: React.FormEvent, callbackUrl: string) => Promise<void>;
-  handleGoogleLogin: (callbackUrl: string) => Promise<void>;
-  itemVariants: any;
 }) {
   const params = SearchParams();
   const { callbackUrl, error } = params;

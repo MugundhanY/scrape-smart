@@ -3,7 +3,22 @@ import { prisma } from "../prisma";
 import { revalidatePath } from "next/cache";
 import { ExecutionPhaseStatus, WorkflowExecutionStatus } from "@/types/workflow";
 import { waitFor } from "../helper/waitFor";
-import { ExecutionPhase } from "@prisma/client";
+// Define the ExecutionPhase type locally
+type ExecutionPhase = {
+    id: string;
+    userId: string;
+    status: string;
+    number: number;
+    node: string;
+    name: string;
+    startedAt?: Date | null;
+    completedAt?: Date | null;
+    inputs?: string | null;
+    outputs?: string | null;
+    creditsConsumed?: number | null;
+    workflowExecutionId: string;
+};
+
 import { AppNode } from "@/types/appNode";
 import { TaskRegistry } from "./task/registry";
 import { TaskParamType, TaskType } from "@/types/task";
@@ -103,11 +118,10 @@ async function finalizeWorkflowExecution(
         where: {
             id: workflowId,
             lastRunId: executionId,
-        },
-        data: {
+        },        data: {
             lastRunStatus: finalStatus,
         }
-    }).catch((err) => {
+    }).catch((err: Error) => {
         console.log("Cannot update workflow last run status", err);
     });
 }

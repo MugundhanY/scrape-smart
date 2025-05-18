@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 import { WorkflowExecutionStatus, WorkflowStatus } from '@/types/workflow';
-import { Workflow } from '@prisma/client'
+import { Workflow } from '@/types/prisma';
 import { ChevronRightIcon, ClockIcon, CoinsIcon, CornerDownRightIcon, Delete, FileTextIcon, MoreVerticalIcon, MoveRightIcon, PlayIcon, ShuffleIcon, TrashIcon } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react'

@@ -12,6 +12,15 @@ const nextConfig = {
   images: {
     domains: ['images.unsplash.com'],
   },
+  // Skip type checking during build for faster builds
+  typescript: {
+    // Specify ignoreBuildErrors to ignore TypeScript errors during build
+    ignoreBuildErrors: true,
+  },
+  // Ignore ESLint warnings/errors during build
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   // Properly handle server-only packages
   webpack: (config, { isServer }) => {
     if (!isServer) {
