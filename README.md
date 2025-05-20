@@ -44,8 +44,8 @@ Set up recurring scrapes on your preferred schedule with our intuitive cron-base
 
 ScrapeSmart is built on a modern, robust technology stack:
 
-- **Frontend**: Next.js, React, TypeScript, TailwindCSS, Shadcn UI
-- **Backend**: Node.js, Prisma ORM
+- **Fullstack Framework**: Next.js (handles both frontend and backend/API routes), React, TypeScript, TailwindCSS, Shadcn UI
+- **Database ORM**: Prisma
 - **Browser Automation**: Puppeteer
 - **AI Integration**: OpenAI, Google Gemini, Anthropic Claude
 - **Scheduling**: Cron-based scheduling with Vercel's built-in cron jobs
