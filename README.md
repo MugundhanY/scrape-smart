@@ -124,7 +124,3 @@ For more detailed documentation on specific features and use cases, check out ou
 - [Cron Implementation Details](docs/cron-implementation.md)
 - [Puppeteer on Vercel](docs/puppeteer-vercel.md)
 - [Vercel Cron Usage](docs/vercel-cron-usage.md)
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
