@@ -7,27 +7,29 @@ const publicRoutes = [
   '/signup',
   '/api/webhooks/stripe',
   '/api/auth',
+  '/api/health',
+  '/api/cron',
   '/',
   // Add other public routes here
 ];
 
 // Check if the requested path is a public route
 const isPublicRoute = (path: string) => {
-  return publicRoutes.some(route => path === route || path.startsWith(`${route}/`)) || 
-         path.match(/^\/api\/workflows\/.*/) !== null;
+  return publicRoutes.some(route => path === route || path.startsWith(`${route}/`)) ||
+    path.match(/^\/api\/workflows\/.*/) !== null;
 };
 
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
-  
+
   // Allow public routes without authentication
   if (isPublicRoute(path)) {
     return NextResponse.next();
   }
 
   // Check for authentication by looking for the session cookie
-  const hasAuthCookie = request.cookies.has('next-auth.session-token') || 
-                       request.cookies.has('__Secure-next-auth.session-token');
+  const hasAuthCookie = request.cookies.has('next-auth.session-token') ||
+    request.cookies.has('__Secure-next-auth.session-token');
 
   // Redirect to signin if not authenticated
   if (!hasAuthCookie) {

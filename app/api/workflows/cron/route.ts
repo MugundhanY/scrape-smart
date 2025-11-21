@@ -2,11 +2,16 @@ import { prisma } from "@/lib/prisma";
 import { getAppUrl } from "@/types/appUrl";
 import { WorkflowStatus } from "@/types/workflow";
 import { timingSafeEqual } from "crypto";
+import logger from "@/lib/logger";
+import { requestContext } from "@/lib/observability/context";
+import { metrics } from "@/lib/observability/metrics";
+import { handleError } from "@/lib/observability/errors";
 
-// Function to securely validate the API secret
-function isValidSecret(secret: string){
+export const dynamic = 'force-dynamic';
+
+function isValidSecret(secret: string) {
     const API_SECRET = process.env.API_SECRET;
-    if(!API_SECRET) return false;
+    if (!API_SECRET) return false;
     try {
         return timingSafeEqual(Buffer.from(secret), Buffer.from(API_SECRET));
     } catch (error) {
@@ -14,47 +19,103 @@ function isValidSecret(secret: string){
     }
 }
 
-export async function GET(req: Request){
-    // Security check for cron endpoint
-    const authHeader = req.headers.get("authorization");
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-        return Response.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    const secret = authHeader.split(" ")[1];
-    if (!isValidSecret(secret)) {
-        return Response.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const now = new Date();
-    
-    // Look ahead by 10 minutes to catch any workflows that should run
-    // within the next cron job interval (optimization for Vercel free tier)
-    const lookAheadTime = new Date(now);
-    lookAheadTime.setMinutes(lookAheadTime.getMinutes() + 10);
-      const workflows = await prisma.workflow.findMany({
-        select: {id: true},
-        where: {
-            status: WorkflowStatus.PUBLISHED,
-            cron: {
-                not: null,
-            },
-            nextRunAt: {
-                lte: lookAheadTime, // Use lookAheadTime instead of now to process workflows scheduled within the next 10 minutes
-            }
-        }
+export async function GET(req: Request) {
+    const ctx = requestContext.create({
+        path: '/api/workflows/cron',
+        method: 'GET',
     });
 
-    for(const workflow of workflows) {
-        triggerWorkflow(workflow.id);
-    }
+    try {
+        const authHeader = req.headers.get("authorization");
 
-    return Response.json({workflowsToRun: workflows.length}, {status: 200});
+        if (!authHeader || !authHeader.startsWith("Bearer ")) {
+            logger.warn('Workflow cron: missing auth header', {
+                requestId: ctx.requestId,
+            });
+
+            requestContext.delete(ctx.requestId);
+            return Response.json({ error: "Unauthorized" }, { status: 401 });
+        }
+
+        const secret = authHeader.split(" ")[1];
+        if (!isValidSecret(secret)) {
+            logger.warn('Workflow cron: invalid secret', {
+                requestId: ctx.requestId,
+            });
+
+            requestContext.delete(ctx.requestId);
+            return Response.json({ error: "Unauthorized" }, { status: 401 });
+        }
+
+        const now = new Date();
+        const lookAheadTime = new Date(now);
+        lookAheadTime.setMinutes(lookAheadTime.getMinutes() + 10);
+
+        logger.info('Workflow cron job started', {
+            requestId: ctx.requestId,
+            lookAheadTime: lookAheadTime.toISOString(),
+        });
+
+        const workflows = await metrics.trackQuery('findMany:workflows:scheduled', () =>
+            prisma.workflow.findMany({
+                select: { id: true },
+                where: {
+                    status: WorkflowStatus.PUBLISHED,
+                    cron: {
+                        not: null,
+                    },
+                    nextRunAt: {
+                        lte: lookAheadTime,
+                    }
+                }
+            })
+        );
+
+        logger.info('Scheduled workflows found', {
+            requestId: ctx.requestId,
+            count: workflows.length,
+            workflowIds: workflows.map(w => w.id),
+        });
+
+        for (const workflow of workflows) {
+            triggerWorkflow(workflow.id, ctx.requestId);
+        }
+
+        const duration = requestContext.getDuration(ctx.requestId);
+
+        logger.audit('Workflow cron job completed', {
+            requestId: ctx.requestId,
+            workflowsTriggered: workflows.length,
+            duration,
+        });
+
+        requestContext.delete(ctx.requestId);
+
+        return Response.json({ workflowsToRun: workflows.length }, { status: 200 });
+
+    } catch (error) {
+        const errorResponse = handleError(error as Error, {
+            requestId: ctx.requestId,
+            endpoint: '/api/workflows/cron',
+        });
+
+        requestContext.delete(ctx.requestId);
+
+        return Response.json({
+            error: errorResponse.error,
+        }, { status: errorResponse.statusCode });
+    }
 }
 
-function triggerWorkflow(workflowId: string) {
-    const triggerApiUrl = getAppUrl(`/api/workflows/execute?workflowId=${workflowId}`);
+function triggerWorkflow(workflowId: string, parentRequestId?: string) {
+    const triggerApiUrl = getAppUrl(`api/workflows/execute?workflowId=${workflowId}`);
 
-    // Use async fetch pattern with more comprehensive error handling
+    logger.info('Triggering workflow execution', {
+        parentRequestId,
+        workflowId,
+        triggerUrl: triggerApiUrl,
+    });
+
     fetch(triggerApiUrl, {
         method: 'GET',
         headers: {
@@ -63,14 +124,22 @@ function triggerWorkflow(workflowId: string) {
         },
         cache: "no-store",
     })
-    .then(async response => {
-        if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(`HTTP error ${response.status}: ${errorText}`);
-        }
-        console.log(`Successfully triggered workflow ${workflowId}`);
-    })
-    .catch((error) => {
-        console.error(`Error triggering workflow ${workflowId}:`, error.message);
-    });
+        .then(async response => {
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`HTTP error ${response.status}: ${errorText}`);
+            }
+
+            logger.info('Workflow triggered successfully', {
+                parentRequestId,
+                workflowId,
+            });
+        })
+        .catch((error) => {
+            logger.error('Failed to trigger workflow', {
+                parentRequestId,
+                workflowId,
+                error: error.message,
+            });
+        });
 }
